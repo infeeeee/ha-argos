@@ -56,7 +56,7 @@ Everything is set up in the `configuration.yaml`. Just place it next to the scri
 
 The variable names are based on Home-assistant's Lovelace yaml config.
 
-To reload
+To reload the changed config use the reload button.
 
 ### Basic configuration
 
