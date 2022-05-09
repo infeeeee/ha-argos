@@ -1,0 +1,27 @@
+settings:
+  url: https://myserver.url
+  token: my-secret-token
+  icon_color: ffffff
+  icon_size: 22
+lines:
+  - entity: sensor.livingroom_temperature
+    attribute:
+      - state
+      - unit_of_measurement
+    icon: mdi:home-assistant
+  - separator
+  - entity: light.livingroom
+    service: light.toggle
+    icon: mdi:ceiling-light
+    name: Livingroom ceiling light
+    data:
+        brightness: 255
+  - name: Garage
+    icon: mdi:garage
+    entities:
+    - entity: cover.garage
+      service: cover.open_cover
+      name: Open garage door
+    - entity: cover.garage
+      service: cover.close_cover
+      name: Close garage door
