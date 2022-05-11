@@ -187,13 +187,16 @@ def print_icon(icon_string):
     """
     if NOIMAGE:
         return ''
-    if icon_string.startswith('gtk:'):
+    if icon_string.startswith('gtk:') and HOST == 'argos':
         return f'iconName={icon_string[4:]}'
     elif icon_string.startswith('mdi:'):
         mdi_name = icon_string[4:]
         # Try to find it in cache:
         if CACHE[icon_string] and not NOCACHE:
-            return append_icon_size(f'image={CACHE[icon_string]}')
+            if HOST == 'argos':
+                return append_icon_size(f'image={CACHE[icon_string]}')
+            elif HOST == 'xbar':
+                return f'templateImage={CACHE[icon_string]}'
         else:
             icon_resp = requests.get(
                 f'https://raw.githubusercontent.com/Templarian/MaterialDesign-SVG/master/svg/{mdi_name}.svg')
@@ -232,9 +235,15 @@ def print_icon(icon_string):
                 global CACHE_CHANGED
                 CACHE_CHANGED = True
                 CACHE[icon_string] = icon_b
-            return append_icon_size(f'image={icon_b}')
+            if HOST == 'argos':
+                return append_icon_size(f'image={icon_b}')
+            elif HOST == 'xbar':
+                return f'templateImage={icon_b}'
     else:
-        return append_icon_size(f'image={icon_string}')
+        if HOST == 'argos':
+            return append_icon_size(f'image={icon_string}')
+        elif HOST == 'xbar':
+                return f'templateImage={icon_string}'
 
 
 def append_icon_size(image_string):
@@ -246,7 +255,7 @@ def append_icon_size(image_string):
     Returns:
         String: The icon as string with size
     """
-    if SETTINGS["icon_size"]:
+    if SETTINGS["icon_size"] and HOST == 'argos':
         return f'{image_string}, imageWidth={SETTINGS["icon_size"]}'
     else:
         return image_string
@@ -333,9 +342,9 @@ if config['lines']:
 else:
     print('HA')
 
-
-print('---')
-print(reload_string)
+if HOST == 'argos':
+    print('---')
+    print(reload_string)
 
 # -------------------------------- Write cache ------------------------------- #
 

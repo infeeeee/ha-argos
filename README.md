@@ -56,6 +56,19 @@ ln -s `readlink -f .`/ha-argos.py ~/.config/argos/
 cp configuration.yaml.example configuration.yaml
 ```
 
+### Manual install on a mac
+
+After installing xbar
+
+```shell
+git clone https://github.com/infeeeee/ha-argos
+cd ha-argos
+python3 -m pip install --user -r requirements.txt
+chmod +x ha-argos.py
+ln -s $PWD/ha-argos.py "$HOME/Library/Application Support/xbar/plugins/"
+cp configuration.yaml.example configuration.yaml
+```
+
 ## Configuration
 
 Everything is set up in the `configuration.yaml`. Just place it next to the script. you can start from `configuration.yaml.example`, just copy and edit it. 
@@ -112,7 +125,7 @@ Create token on your instance: [![Open your Home Assistant instance and show you
 
 `icon_color`: [optional] The color of the icon. Defaults to black. Add an RGB hex code, without the `#` sign
 
-`icon_size`: [optional] The width of the image in pixels, it's the `imageWidth` Argos parameter: [Argos help](https://github.com/p-e-w/argos#line-attributes)
+`icon_size`: [optional] [Argos only] The width of the image in pixels, it's the `imageWidth` Argos parameter: [Argos help](https://github.com/p-e-w/argos#line-attributes)
 
 ### Lines
 
@@ -157,7 +170,7 @@ lines:
 
 `icon:` [optional] An icon for that line. It depends on the prefix of this line, where it will get the icon:
 
-- `gtk:` A gtk icon will be displayed. See possible values on [freedesktop.org icon naming specification](https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html)
+- `gtk:` [argos only] A gtk icon will be displayed. See possible values on [freedesktop.org icon naming specification](https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html)
 - `mdi:` Material Design Icon, as on Home Assistant ui
 - Without prefix a base64 encoded image can be added
 
