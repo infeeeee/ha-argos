@@ -1,10 +1,12 @@
 # ha-argos
 
-Put Home-asstisant to your top bar! An [Argos](https://github.com/p-e-w/argos)/[Kargos](https://github.com/lipido/kargos)/Bitbar/[Xbar](https://github.com/matryer/xbar) script.
+Put Home Asstisant in your top bar! An [Argos](https://github.com/p-e-w/argos)/[Kargos](https://github.com/lipido/kargos)/[Xbar](https://github.com/matryer/xbar) script.
 
-Mac (Bitbar/Xbar) compatibility is not tested, but it should work. Open an issue if you are trying to use it, I would be happy to help.
+Mac (Xbar) compatibility is not tested, but it should work. Open an issue if you are trying to use it, I would be happy to help.
 
 ## Screenshots
+
+Gnome/Argos:
 
 ![](images/Screenshot%20from%202022-05-09%2023-54-36.png)
 
@@ -20,7 +22,7 @@ None of the existing top bar clients were suitable for me, so I wrote this one.
 
 ## Install
 
-1. Install argos, kargos, bitbar or xbar
+1. Install Argos, Kargos or Xbar
 2. Clone the repo or download as zip
 3. Install python and dependencies
 4. Make sure `ha-argos.py` is executable
@@ -28,6 +30,8 @@ None of the existing top bar clients were suitable for me, so I wrote this one.
 6. Set up configuration.yaml
 
 ### Example on a Debian based linux with pip:
+
+After installing Argos or Kargos:
 
 ```shell
 sudo apt install python3 python3-pip
@@ -40,6 +44,8 @@ cp configuration.yaml.example configuration.yaml
 ```
 
 ### Example on Arch:
+
+After installing Argos or Kargos:
 
 ```shell
 pacman -S python python-yaml python-requests python-lxml
@@ -54,7 +60,7 @@ cp configuration.yaml.example configuration.yaml
 
 Everything is set up in the `configuration.yaml`. Just place it next to the script. you can start from `configuration.yaml.example`, just copy and edit it. 
 
-The variable names are based on Home-assistant's Lovelace yaml config.
+The variable names are based on Home Assistant's Lovelace yaml config.
 
 To reload the changed config use the reload button.
 
@@ -98,11 +104,11 @@ settings:
   icon_size: 22
 ```
 
-`url`: [required] The full url of your home-assistace instance. Include http(s) at the beginning and port umber at the end.
+`url`: [required] The full url of your Home Assistace instance. Include http(s) at the beginning and port umber at the end.
 
 `token`: [required] Your long-lived access token. You can generate this on your profile. [Official help.](https://www.home-assistant.io/docs/authentication/#your-account-profile)
 
-You can navigate to your ha instance to create a token with this button: [![Open your Home Assistant instance and show your Home Assistant user's profile.](https://my.home-assistant.io/badges/profile.svg)](https://my.home-assistant.io/redirect/profile/)
+Create token on your instance: [![Open your Home Assistant instance and show your Home Assistant user's profile.](https://my.home-assistant.io/badges/profile.svg)](https://my.home-assistant.io/redirect/profile/)
 
 `icon_color`: [optional] The color of the icon. Defaults to black. Add an RGB hex code, without the `#` sign
 
@@ -139,11 +145,11 @@ lines:
         brightness: 255
 ```
 
-`entity`: [required] A entity id from home assistant
+`entity`: [required] A entity id from Home Assistant
 
 `name`: [optional] The name how it should appear. If omitted, it will display the attribute selected. If attribute omitted, it will display the `friendly_name` attribute of the entity.
 
-`attribute`: [optional] An attribute or a list of attributes to get from homeassistant.
+`attribute`: [optional] An attribute or a list of attributes to get from Home Assistant.
 
 `service`: [optional] A service to run when this line is clicked.
 
@@ -182,7 +188,7 @@ Open an issue if something isn't working!
 
 ### Running the script in terminal
 
-This script is an executable, so if you just simply run it in the terminal you should see some sane output.
+The script is an executable, so if you just simply run it in the terminal you should see some sane output. You can check the exact error message, while it's hidden on the gui:
 
 ```shell
 cd ha-argos
@@ -191,7 +197,7 @@ cd ha-argos
 
 ### Cache
 
-The script caches the icons and `friendly_name`s of the entities to a `cache.json` file. If some icons or name is not updating, just simply delete this file, it will be recreated during next call to Home Assistant.
+The script caches the icons and `friendly_name`s of the entities to a `cache.json` file. If some icons or names are not updating, just simply delete this file, it will be recreated during next call to Home Assistant.
 
 
 ## License
