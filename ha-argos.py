@@ -144,7 +144,7 @@ def print_line(line, submenu=False):
     # There is a call to a service:
     if cmd['service'] and cmd['entity']:
         output.append(
-            f'| bash=\"curl -X POST -H \\"Authorization: Bearer {SERVER_TOKEN}\\" -H \\"Content-Type: application/json\\"'
+            f'| {t("bash")}=\"curl -X POST -H \\"Authorization: Bearer {SERVER_TOKEN}\\" -H \\"Content-Type: application/json\\"'
         )
         if cmd['data']:
             output.append(
@@ -234,6 +234,35 @@ def append_icon_size(image_string):
     else:
         return image_string
 
+TRANSLATIONS = {
+    'bash':['shell']
+}
+
+
+def t(command):
+    """Translate commands to their xbar equivalent
+
+    Args:
+        command (String): The argos command to translate
+
+    Returns:
+        String: The translated string
+    """
+    if HOST == 'argos':
+        out = command
+    elif HOST == 'xbar':
+        out = TRANSLATIONS[command][0]
+    return out
+
+
+# ------------------------------- Start script ------------------------------- #
+
+HOST = 'argos'
+
+# Check if Argos or Xbar:
+if os.getenv('ARGOS_VERSION') != '2':
+    HOST = 'xbar'
+    
 
 # -------------------------- Open configuration.yaml ------------------------- #
 
