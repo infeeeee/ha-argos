@@ -1,8 +1,8 @@
 # ha-argos
 
-Put Home Asstisant in your top bar! An [Argos](https://github.com/p-e-w/argos)/[Kargos](https://github.com/lipido/kargos)/[Xbar](https://github.com/matryer/xbar) script.
+Put Home Asstisant in your top bar! An [Argos](https://github.com/p-e-w/argos)/[Kargos](https://github.com/lipido/kargos)~~/[Xbar](https://github.com/matryer/xbar)~~ script.
 
-Mac (Xbar) compatibility is not tested, but it should work. Open an issue if you are trying to use it, I would be happy to help.
+Mac (Xbar) is not working yet. For a WIP state check the `xbar` branch. PRs are welcomed if you want to help with that.
 
 ## Screenshots
 
@@ -16,7 +16,7 @@ None of the existing top bar clients were suitable for me, so I wrote this one.
 
 | Name                                                                                              | Platforms               | Features | Configuration |
 | ------------------------------------------------------------------------------------------------- | ----------------------- | -------- | ------------- |
-| ha-argos                                                                                          | Linux (Gnome, Kde), Mac | Lot      | yaml file     |
+| ha-argos                                                                                          | Linux (Gnome, Kde), ~~Mac~~ | Lot      | yaml file     |
 | [ha-menu](https://github.com/addyire/ha-menu)                                                     | Mac, Windows            | Lot      | json file     |
 | [Home Assistant Extension](https://extensions.gnome.org/extension/4170/home-assistant-extension/) | Linux (Gnome)           | Limited  | Gui           |
 
