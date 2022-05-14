@@ -188,11 +188,11 @@ Open an issue if something isn't working!
 
 ### Running the script in terminal
 
-The script is an executable, so if you just simply run it in the terminal you should see some sane output. You can check the exact error message, while it's hidden on the gui:
+The script is an executable, so if you just simply run it in the terminal you should see some sane output. You can check the exact error message, while it's hidden on the gui. It's also possible to hide the long base64 image strings with the argument `--noimage`, so it's easier to read the code:
 
 ```shell
 cd ha-argos
-./ha-argos.py
+./ha-argos.py --noimage
 ```
 
 ### Cache

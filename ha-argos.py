@@ -182,6 +182,8 @@ def print_icon(icon_string):
     Returns:
         String: The icon as string, base64 or gtk...
     """
+    if NOIMAGE:
+        return ''
     if icon_string.startswith('gtk:'):
         return f'iconName={icon_string[4:]}'
     elif icon_string.startswith('mdi:'):
@@ -242,6 +244,14 @@ HOST = 'argos'
 if os.getenv('ARGOS_VERSION') != '2':
     HOST = 'xbar'
     
+
+# Do not print images for easier debugging:
+NOIMAGE = False
+
+# Usage: ./ha-argos.py --noimage
+if '--noimage' in sys.argv:
+    NOIMAGE = True
+
 
 # -------------------------- Open configuration.yaml ------------------------- #
 
