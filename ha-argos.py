@@ -8,6 +8,7 @@ import json
 from collections import defaultdict
 import base64
 from lxml import etree as ET
+from cairosvg import svg2png
 
 reload_string = '<span weight="bold">Reload</span> | refresh=true iconName=view-refresh-symbolic'
 
@@ -191,7 +192,7 @@ def print_icon(icon_string):
     elif icon_string.startswith('mdi:'):
         mdi_name = icon_string[4:]
         # Try to find it in cache:
-        if CACHE[icon_string]:
+        if CACHE[icon_string] and not NOCACHE:
             return append_icon_size(f'image={CACHE[icon_string]}')
         else:
             icon_resp = requests.get(
@@ -201,7 +202,6 @@ def print_icon(icon_string):
             svg_root = ET.fromstring(icon_resp.content)
 
             # Change svg color:
-
             for t in svg_root:
                 if SETTINGS["icon_color"] and t.tag == '{http://www.w3.org/2000/svg}path':
                     t.set('style', f'fill:#{SETTINGS["icon_color"]}')
@@ -214,11 +214,24 @@ def print_icon(icon_string):
                 xml_declaration=True
             )
 
-            # Encode and cache svg
-            icon_b = base64.b64encode(icon_str).decode("utf-8")
-            global CACHE_CHANGED
-            CACHE_CHANGED = True
-            CACHE[icon_string] = icon_b
+            if HOST == 'xbar':
+                # Convert to png on mac:
+                icon_png = svg2png(
+                    bytestring=icon_str,
+                    dpi=144,
+                    parent_height=20
+                )
+                # Encode png:
+                icon_b = base64.b64encode(icon_png).decode("utf-8")
+            else:
+                # Encode svg:
+                icon_b = base64.b64encode(icon_str).decode("utf-8")
+
+            # Cache:
+            if not NOCACHE:
+                global CACHE_CHANGED
+                CACHE_CHANGED = True
+                CACHE[icon_string] = icon_b
             return append_icon_size(f'image={icon_b}')
     else:
         return append_icon_size(f'image={icon_string}')
@@ -255,6 +268,12 @@ NOIMAGE = False
 if '--noimage' in sys.argv:
     NOIMAGE = True
 
+# Do not use cache
+NOCACHE = False
+
+# Usage: ./ha-argos.py --noimage
+if '--nocache' in sys.argv:
+    NOCACHE = True
 
 # -------------------------- Open configuration.yaml ------------------------- #
 

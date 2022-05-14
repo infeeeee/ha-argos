@@ -48,7 +48,7 @@ cp configuration.yaml.example configuration.yaml
 After installing Argos or Kargos:
 
 ```shell
-pacman -S python python-yaml python-requests python-lxml
+pacman -S python python-yaml python-requests python-lxml python-cairosvg
 git clone https://github.com/infeeeee/ha-argos
 cd ha-argos
 chmod +x ha-argos.py
@@ -194,6 +194,11 @@ The script is an executable, so if you just simply run it in the terminal you sh
 cd ha-argos
 ./ha-argos.py --noimage
 ```
+
+#### All script arguments:
+
+`--noimage`: Do not add images
+`--nocache`: Do not cache images
 
 ### Cache
 

@@ -1,3 +1,4 @@
 pyyaml
 requests
 lxml
+cairosvg
