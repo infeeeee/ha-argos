@@ -193,57 +193,52 @@ def print_icon(icon_string):
         mdi_name = icon_string[4:]
         # Try to find it in cache:
         if CACHE[icon_string] and not NOCACHE:
-            if HOST == 'argos':
-                return append_icon_size(f'image={CACHE[icon_string]}')
-            elif HOST == 'xbar':
-                return f'templateImage={CACHE[icon_string]}'
+            return append_icon_size(f'templateImage={CACHE[icon_string]}')
+            
+        # Download icon if not in the cache:    
         else:
             icon_resp = requests.get(
                 f'https://raw.githubusercontent.com/Templarian/MaterialDesign-SVG/master/svg/{mdi_name}.svg')
+            
+            if HOST =='argos':
+                # Build svg tree:
+                svg_root = ET.fromstring(icon_resp.content)
 
-            # Build svg tree:
-            svg_root = ET.fromstring(icon_resp.content)
+                # Change svg color:
+                for t in svg_root:
+                    if SETTINGS["icon_color"] and t.tag == '{http://www.w3.org/2000/svg}path':
+                        t.set('style', f'fill:#{SETTINGS["icon_color"]}')
 
-            # Change svg color:
-            for t in svg_root:
-                if SETTINGS["icon_color"] and t.tag == '{http://www.w3.org/2000/svg}path':
-                    t.set('style', f'fill:#{SETTINGS["icon_color"]}')
-
-            # svg to string:
-            icon_str = ET.tostring(
-                svg_root,
-                encoding='utf-8',
-                method='xml',
-                xml_declaration=True
-            )
-
-            if HOST == 'xbar':
-                # Convert to png on mac:
-                icon_png = svg2png(
-                    bytestring=icon_str,
-                    dpi=144,
-                    parent_height=20
+                # svg to string:
+                icon_str = ET.tostring(
+                    svg_root,
+                    encoding='utf-8',
+                    method='xml',
+                    xml_declaration=True
                 )
-                # Encode png:
-                icon_b = base64.b64encode(icon_png).decode("utf-8")
-            else:
+
                 # Encode svg:
                 icon_b = base64.b64encode(icon_str).decode("utf-8")
+
+            elif HOST == 'xbar'  or HOST == 'swiftbar':
+                # Convert to png on mac:
+                icon_png = svg2png(
+                    bytestring=icon_resp.content,
+                    dpi=144
+                )
+                # Encode png:
+                icon_b = base64.b64encode(icon_png).decode("utf-8")                
 
             # Cache:
             if not NOCACHE:
                 global CACHE_CHANGED
                 CACHE_CHANGED = True
                 CACHE[icon_string] = icon_b
-            if HOST == 'argos':
-                return append_icon_size(f'image={icon_b}')
-            elif HOST == 'xbar':
-                return f'templateImage={icon_b}'
+            
+            return append_icon_size(f'templateImage={icon_b}')            
     else:
-        if HOST == 'argos':
-            return append_icon_size(f'image={icon_string}')
-        elif HOST == 'xbar':
-                return f'templateImage={icon_string}'
+        # The other option should a base64 ecoded image:
+        return append_icon_size(f'templateImage={icon_string}')
 
 
 def append_icon_size(image_string):
@@ -262,13 +257,14 @@ def append_icon_size(image_string):
 
 # ------------------------------- Start script ------------------------------- #
 
-
-HOST = 'argos'
-
-# Check if Argos or Xbar:
-if os.getenv('ARGOS_VERSION') != '2':
+# Check host:
+HOST = ''
+if os.getenv('ARGOS_VERSION') == '2':
+    HOST = 'argos'
+elif os.getenv('XBARDarkMode'):
     HOST = 'xbar'
-
+if os.getenv('SWIFTBAR') == '1':
+    HOST = 'swiftbar'
 
 # Do not print images for easier debugging:
 NOIMAGE = False
@@ -298,9 +294,10 @@ except FileNotFoundError:
     print('---')
     print('Configuration.yaml not found. Please create one!')
     print('It should be in this directory:')
-    print(script_dir)
-    print('---')
-    print(reload_string)
+    print(f'{script_dir} | href={script_dir}')
+    if HOST == 'argos':
+        print('---')
+        print(reload_string)
     exit()
 
 # ------------------------------ Open cache file ----------------------------- #

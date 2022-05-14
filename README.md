@@ -1,8 +1,8 @@
 # ha-argos
 
-Put Home Asstisant in your top bar! An [Argos](https://github.com/p-e-w/argos)/[Kargos](https://github.com/lipido/kargos)~~/[Xbar](https://github.com/matryer/xbar)~~ script.
+Put Home Asstisant in your top bar! An [Argos](https://github.com/p-e-w/argos)/[Kargos](https://github.com/lipido/kargos)/[Xbar](https://github.com/matryer/xbar)/[SwiftBar](https://github.com/swiftbar/SwiftBar) script.
 
-Mac (Xbar) is not working yet. For a WIP state check the `xbar` branch. PRs are welcomed if you want to help with that.
+On Mac (Xbar/SwiftBar) the script is not working yet. PRs are welcomed if you want to help with that.
 
 ## Screenshots
 
@@ -58,12 +58,13 @@ cp configuration.yaml.example configuration.yaml
 
 ### Manual install on a mac
 
-After installing xbar
+After installing xbar or swiftbar and homebrew
 
 ```shell
+brew install git py3cairo 
 git clone https://github.com/infeeeee/ha-argos
 cd ha-argos
-python3 -m pip install --user -r requirements.txt
+$(brew --prefix)/opt/python/libexec/bin/pip install -r requirements.txt
 chmod +x ha-argos.py
 ln -s $PWD/ha-argos.py "$HOME/Library/Application Support/xbar/plugins/"
 cp configuration.yaml.example configuration.yaml
@@ -123,7 +124,7 @@ settings:
 
 Create token on your instance: [![Open your Home Assistant instance and show your Home Assistant user's profile.](https://my.home-assistant.io/badges/profile.svg)](https://my.home-assistant.io/redirect/profile/)
 
-`icon_color`: [optional] The color of the icon. Defaults to black. Add an RGB hex code, without the `#` sign
+`icon_color`: [optional] [Argos only] The color of the icon. Defaults to black. Add an RGB hex code, without the `#` sign
 
 `icon_size`: [optional] [Argos only] The width of the image in pixels, it's the `imageWidth` Argos parameter: [Argos help](https://github.com/p-e-w/argos#line-attributes)
 
@@ -167,6 +168,8 @@ lines:
 `service`: [optional] A service to run when this line is clicked.
 
 `data`: [optional] Data for the service
+
+`prefix`: [optional] Some text before any other data. Useful to write something about sensors.
 
 `icon:` [optional] An icon for that line. It depends on the prefix of this line, where it will get the icon:
 
@@ -216,7 +219,6 @@ cd ha-argos
 ### Cache
 
 The script caches the icons and `friendly_name`s of the entities to a `cache.json` file. If some icons or names are not updating, just simply delete this file, it will be recreated during next call to Home Assistant.
-
 
 ## License
 
