@@ -1,8 +1,8 @@
 # ha-argos
 
-Put Home Asstisant in your top bar! An [Argos](https://github.com/p-e-w/argos)/[Kargos](https://github.com/lipido/kargos)~~/[Xbar](https://github.com/matryer/xbar)~~ script.
+Put Home Asstisant in your top bar! An [Argos](https://github.com/p-e-w/argos)/[Kargos](https://github.com/lipido/kargos)/[Xbar](https://github.com/matryer/xbar)/[SwiftBar](https://github.com/swiftbar/SwiftBar) script.
 
-Mac (Xbar) is not working yet. For a WIP state check the `xbar` branch. PRs are welcomed if you want to help with that.
+On Mac (Xbar/SwiftBar) the script is not working yet. PRs are welcomed if you want to help with that.
 
 ## Screenshots
 
@@ -58,7 +58,7 @@ cp configuration.yaml.example configuration.yaml
 
 ### Manual install on a mac
 
-After installing xbar and homebrew
+After installing xbar or swiftbar and homebrew
 
 ```shell
 brew install git py3cairo 
@@ -169,6 +169,8 @@ lines:
 
 `data`: [optional] Data for the service
 
+`prefix`: [optional] Some text before any other data. Useful to write something about sensors.
+
 `icon:` [optional] An icon for that line. It depends on the prefix of this line, where it will get the icon:
 
 - `gtk:` [argos only] A gtk icon will be displayed. See possible values on [freedesktop.org icon naming specification](https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html)
@@ -217,7 +219,6 @@ cd ha-argos
 ### Cache
 
 The script caches the icons and `friendly_name`s of the entities to a `cache.json` file. If some icons or names are not updating, just simply delete this file, it will be recreated during next call to Home Assistant.
-
 
 ## License
 
