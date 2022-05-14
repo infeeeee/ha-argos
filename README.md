@@ -145,7 +145,7 @@ lines:
         brightness: 255
 ```
 
-`entity`: [required] A entity id from Home Assistant
+`entity`: [required] A entity id from Home Assistant. If the `service` is a Home Assistant script, it can be omitted.
 
 `name`: [optional] The name how it should appear. If omitted, it will display the attribute selected. If attribute omitted, it will display the `friendly_name` attribute of the entity.
 

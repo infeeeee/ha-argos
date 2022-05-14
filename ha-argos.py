@@ -142,23 +142,25 @@ def print_line(line, submenu=False):
         output.extend([cmd['name']])
 
     # There is a call to a service:
-    if cmd['service'] and cmd['entity']:
+    if cmd['service']:
         output.append(
             f'| bash=\"curl -X POST -H \\"Authorization: Bearer {SERVER_TOKEN}\\" -H \\"Content-Type: application/json\\"'
         )
-        if cmd['data']:
-            output.append(
-                f'-d \'{{\\"entity_id\\": \\"{cmd["entity"]}\\",')
-            data_keys = [d for d in cmd['data']]
-            for i, d in enumerate(data_keys):
-                output.append(f'\\"{d}\\": \\"{cmd["data"][d]}\\"')
-                if i != len(data_keys) - 1:
-                    output.append(',')
+        if cmd['entity'] or cmd['data']:
+            output.append('-d \'{')
+            if cmd['entity']:
+                output.append(
+                    f'\\"entity_id\\": \\"{cmd["entity"]}\\"'
+                )
+            if cmd['entity'] and cmd['data']:
+                output.append(',')
+            if cmd['data']:
+                data_keys = [d for d in cmd['data']]
+                for i, d in enumerate(data_keys):
+                    output.append(f'\\"{d}\\": \\"{cmd["data"][d]}\\"')
+                    if i != len(data_keys) - 1:
+                        output.append(',')
             output.append('}\'')
-        else:
-            output.append(
-                f'-d \'{{\\"entity_id\\": \\"{cmd["entity"]}\\"}}\''
-            )
         output.append(
             f'{SERVER_URL}/api/services/{cmd["service"].replace(".","/")}" terminal=false'
         )
@@ -238,12 +240,13 @@ def append_icon_size(image_string):
 
 # ------------------------------- Start script ------------------------------- #
 
+
 HOST = 'argos'
 
 # Check if Argos or Xbar:
 if os.getenv('ARGOS_VERSION') != '2':
     HOST = 'xbar'
-    
+
 
 # Do not print images for easier debugging:
 NOIMAGE = False
