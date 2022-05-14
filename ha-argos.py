@@ -200,35 +200,35 @@ def print_icon(icon_string):
         else:
             icon_resp = requests.get(
                 f'https://raw.githubusercontent.com/Templarian/MaterialDesign-SVG/master/svg/{mdi_name}.svg')
+            
+            if HOST =='argos':
+                # Build svg tree:
+                svg_root = ET.fromstring(icon_resp.content)
 
-            # Build svg tree:
-            svg_root = ET.fromstring(icon_resp.content)
+                # Change svg color:
+                for t in svg_root:
+                    if SETTINGS["icon_color"] and t.tag == '{http://www.w3.org/2000/svg}path':
+                        t.set('style', f'fill:#{SETTINGS["icon_color"]}')
 
-            # Change svg color:
-            for t in svg_root:
-                if SETTINGS["icon_color"] and t.tag == '{http://www.w3.org/2000/svg}path':
-                    t.set('style', f'fill:#{SETTINGS["icon_color"]}')
-
-            # svg to string:
-            icon_str = ET.tostring(
-                svg_root,
-                encoding='utf-8',
-                method='xml',
-                xml_declaration=True
-            )
-
-            if HOST == 'xbar':
-                # Convert to png on mac:
-                icon_png = svg2png(
-                    bytestring=icon_str,
-                    dpi=144,
-                    parent_height=20
+                # svg to string:
+                icon_str = ET.tostring(
+                    svg_root,
+                    encoding='utf-8',
+                    method='xml',
+                    xml_declaration=True
                 )
-                # Encode png:
-                icon_b = base64.b64encode(icon_png).decode("utf-8")
-            else:
+
                 # Encode svg:
                 icon_b = base64.b64encode(icon_str).decode("utf-8")
+
+            elif HOST == 'xbar':
+                # Convert to png on mac:
+                icon_png = svg2png(
+                    bytestring=icon_resp.content,
+                    dpi=144
+                )
+                # Encode png:
+                icon_b = base64.b64encode(icon_png).decode("utf-8")                
 
             # Cache:
             if not NOCACHE:

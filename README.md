@@ -58,12 +58,13 @@ cp configuration.yaml.example configuration.yaml
 
 ### Manual install on a mac
 
-After installing xbar
+After installing xbar and homebrew
 
 ```shell
+brew install git py3cairo 
 git clone https://github.com/infeeeee/ha-argos
 cd ha-argos
-python3 -m pip install --user -r requirements.txt
+$(brew --prefix)/opt/python/libexec/bin/pip install -r requirements.txt
 chmod +x ha-argos.py
 ln -s $PWD/ha-argos.py "$HOME/Library/Application Support/xbar/plugins/"
 cp configuration.yaml.example configuration.yaml
@@ -123,7 +124,7 @@ settings:
 
 Create token on your instance: [![Open your Home Assistant instance and show your Home Assistant user's profile.](https://my.home-assistant.io/badges/profile.svg)](https://my.home-assistant.io/redirect/profile/)
 
-`icon_color`: [optional] The color of the icon. Defaults to black. Add an RGB hex code, without the `#` sign
+`icon_color`: [optional] [Argos only] The color of the icon. Defaults to black. Add an RGB hex code, without the `#` sign
 
 `icon_size`: [optional] [Argos only] The width of the image in pixels, it's the `imageWidth` Argos parameter: [Argos help](https://github.com/p-e-w/argos#line-attributes)
 
