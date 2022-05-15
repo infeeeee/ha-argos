@@ -150,27 +150,50 @@ def print_line(line, submenu=False):
 
     # There is a call to a service:
     if cmd['service']:
-        output.append(
-            f'| bash=\"curl -X POST -H \\"Authorization: Bearer {SERVER_TOKEN}\\" -H \\"Content-Type: application/json\\"'
-        )
-        if cmd['entity'] or cmd['data']:
-            output.append('-d \'{')
-            if cmd['entity']:
-                output.append(
-                    f'\\"entity_id\\": \\"{cmd["entity"]}\\"'
-                )
-            if cmd['entity'] and cmd['data']:
-                output.append(',')
-            if cmd['data']:
-                data_keys = [d for d in cmd['data']]
-                for i, d in enumerate(data_keys):
-                    output.append(f'\\"{d}\\": \\"{cmd["data"][d]}\\"')
-                    if i != len(data_keys) - 1:
-                        output.append(',')
-            output.append('}\'')
-        output.append(
-            f'{SERVER_URL}/api/services/{cmd["service"].replace(".","/")}" terminal=false'
-        )
+        if HOST == 'argos':
+            output.append(
+                f'| bash=\"curl -X POST -H \\"Authorization: Bearer {SERVER_TOKEN}\\" -H \\"Content-Type: application/json\\"'
+            )
+            if cmd['entity'] or cmd['data']:
+                output.append('-d \'{')
+                if cmd['entity']:
+                    output.append(
+                        f'\\"entity_id\\": \\"{cmd["entity"]}\\"'
+                    )
+                if cmd['entity'] and cmd['data']:
+                    output.append(',')
+                if cmd['data']:
+                    data_keys = [d for d in cmd['data']]
+                    for i, d in enumerate(data_keys):
+                        output.append(f'\\"{d}\\": \\"{cmd["data"][d]}\\"')
+                        if i != len(data_keys) - 1:
+                            output.append(',')
+                output.append('}\'')
+            output.append(
+                f'{SERVER_URL}/api/services/{cmd["service"].replace(".","/")}" terminal=false'
+            )
+        elif HOST == 'swiftbar' or 'xbar':            
+            output.append(
+                f"| bash=\"curl -X POST -H \\'Authorization: Bearer {SERVER_TOKEN}\\' -H \'Content-Type: application/json\\'\""
+            )
+            if cmd['entity'] or cmd['data']:
+                output.append('-d \'{')
+                if cmd['entity']:
+                    output.append(
+                        f'\\"entity_id\\": \\"{cmd["entity"]}\\"'
+                    )
+                if cmd['entity'] and cmd['data']:
+                    output.append(',')
+                if cmd['data']:
+                    data_keys = [d for d in cmd['data']]
+                    for i, d in enumerate(data_keys):
+                        output.append(f'\\"{d}\\": \\"{cmd["data"][d]}\\"')
+                        if i != len(data_keys) - 1:
+                            output.append(',')
+                output.append('}\'')
+            output.append(
+                f'{SERVER_URL}/api/services/{cmd["service"].replace(".","/")}" terminal=true'
+            )
     # No call, so add a separator:
     else:
         output.append('|')
