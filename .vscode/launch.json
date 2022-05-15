@@ -11,8 +11,12 @@
             "program": "${workspaceFolder}/ha-argos.py",
             "console": "integratedTerminal",
             "justMyCode": false,
-            "args": ["--nocache"]
-            
+            "args": [
+                "--nocache"
+            ],
+            "env": {
+                "ARGOS_VERSION": "2"
+            }
         }
     ]
 }

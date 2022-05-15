@@ -157,6 +157,12 @@ lines:
     name: Livingroom ceiling light
     data:
         brightness: 255
+  # Example to show what's playing on a media player:
+  - entity: media_player.mpd
+    attribute_separator: ' - '
+    attribute:
+    - media_artist
+    - media_title
 ```
 
 `entity`: [required] A entity id from Home Assistant. If the `service` is a Home Assistant script, it can be omitted.
@@ -170,6 +176,8 @@ lines:
 `data`: [optional] Data for the service
 
 `prefix`: [optional] Some text before any other data. Useful to write something about sensors.
+
+`attribute_separator`: [optional] Use this character between multiple attributes. Defaults to a ` ` space character. 
 
 `icon:` [optional] An icon for that line. It depends on the prefix of this line, where it will get the icon:
 

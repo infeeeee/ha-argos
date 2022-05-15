@@ -63,7 +63,10 @@ def get_ha_attr(attr,  entity_dict, use_cache=False):
             if att == 'state':
                 e_vals.append(str(e_state[att]))
             else:
-                e_vals.append(str(e_state['attributes'][att]))
+                # Defaultdict, if the parameter doesn't exist:
+                e_attrs = defaultdict(bool, e_state['attributes'])
+                if e_attrs[att]:
+                    e_vals.append(str(e_attrs[att]))
         # write to cache:
         if use_cache:
             CACHE_CHANGED = True
@@ -127,7 +130,10 @@ def print_line(line, submenu=False):
         if cmd['attribute']:
             c_val = get_ha_attr(cmd['attribute'], cmd)
             if isinstance(c_val, list):
-                c_val = ' '.join(c_val)
+                if cmd['attribute_separator']:
+                    c_val = cmd['attribute_separator'].join(c_val)
+                else:
+                    c_val = ' '.join(c_val)
             output.append(c_val)
 
         # If no attribute but a name given, print that:
