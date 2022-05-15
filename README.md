@@ -2,8 +2,6 @@
 
 Put Home Asstisant in your top bar! An [Argos](https://github.com/p-e-w/argos)/[Kargos](https://github.com/lipido/kargos)/[Xbar](https://github.com/matryer/xbar)/[SwiftBar](https://github.com/swiftbar/SwiftBar) script.
 
-On Mac (Xbar/SwiftBar) the script is not working yet. PRs are welcomed if you want to help with that.
-
 ## Screenshots
 
 Gnome/Argos:
@@ -25,7 +23,7 @@ None of the existing top bar clients were suitable for me, so I wrote this one.
 1. Install Argos, Kargos or Xbar
 2. Clone the repo or download as zip
 3. Install python and dependencies
-4. Make sure `ha-argos.py` is executable
+4. Make sure `ha-argos.py` and `ha-service.py` are executable
 5. Symlink `ha-argos.py` to the config dir
 6. Set up configuration.yaml
 
@@ -38,7 +36,7 @@ sudo apt install python3 python3-pip
 git clone https://github.com/infeeeee/ha-argos
 cd ha-argos
 pip install -r requirements.txt
-chmod +x ha-argos.py
+chmod +x ha-argos.py ha-service.py
 ln -s `readlink -f .`/ha-argos.py ~/.config/argos/
 cp configuration.yaml.example configuration.yaml
 ```
@@ -51,7 +49,7 @@ After installing Argos or Kargos:
 pacman -S python python-yaml python-requests python-lxml python-cairosvg
 git clone https://github.com/infeeeee/ha-argos
 cd ha-argos
-chmod +x ha-argos.py
+chmod +x ha-argos.py ha-service.py
 ln -s `readlink -f .`/ha-argos.py ~/.config/argos/
 cp configuration.yaml.example configuration.yaml
 ```
@@ -65,7 +63,8 @@ brew install git py3cairo
 git clone https://github.com/infeeeee/ha-argos
 cd ha-argos
 $(brew --prefix)/opt/python/libexec/bin/pip install -r requirements.txt
-chmod +x ha-argos.py
+chmod +x ha-argos.py ha-service.py
+# With swiftbar use your manually set folder instead:
 ln -s $PWD/ha-argos.py "$HOME/Library/Application Support/xbar/plugins/"
 cp configuration.yaml.example configuration.yaml
 ```
@@ -137,7 +136,7 @@ In this section just put the lines on the same order as they will show up on the
 
 #### Separator
 
-It's the same as an [argos separator](https://github.com/p-e-w/argos#rendering), and it behaves the same way: `entity` lines above the first separator display on the bar. If multiple `entity` lines are above the first `separator` they will cycle, and each will be displayed for 3 seconds.
+A separator between lines. One separator is required: `entity` lines above the first separator display on the bar. If multiple `entity` lines are above the first `separator` they will cycle, and each will be displayed for 3 seconds.
 
 After the first `separator` latter ones will display as a horizontal line.
 
@@ -157,6 +156,7 @@ lines:
     name: Livingroom ceiling light
     data:
         brightness: 255
+        color_temp: 423
   # Example to show what's playing on a media player:
   - entity: media_player.mpd
     attribute_separator: ' - '
@@ -222,6 +222,7 @@ cd ha-argos
 #### All script arguments:
 
 `--noimage`: Do not add images
+
 `--nocache`: Do not cache images
 
 ### Cache

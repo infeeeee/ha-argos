@@ -1,7 +1,33 @@
 #!/usr/bin/env python3
 
+# <bitbar.title>ha-argos</bitbar.title>
+# <bitbar.version>v0.1</bitbar.version>
+# <bitbar.author>infeeeee</bitbar.author>
+# <bitbar.author.github>infeeeee</bitbar.author.github>
+# <bitbar.desc> Put Home Asstisant in your top bar!</bitbar.desc>
+# <bitbar.image>https://raw.githubusercontent.com/infeeeee/ha-argos/main/images/Screenshot%20from%202022-05-09%2023-54-36.png</bitbar.image>
+# <bitbar.dependencies>python, homebrew</bitbar.dependencies>
+# <bitbar.abouturl>https://github.com/infeeeee/ha-argos</bitbar.abouturl>
+
+# <swiftbar.hideAbout>true</swiftbar.hideAbout>
+# <swiftbar.hideRunInTerminal>true</swiftbar.hideRunInTerminal>
+# <swiftbar.hideLastUpdated>true</swiftbar.hideLastUpdated>
+# <swiftbar.hideDisablePlugin>true</swiftbar.hideDisablePlugin>
+# <swiftbar.hideSwiftBar>true</swiftbar.hideSwiftBar>
+
+# <xbar.title>ha-argos</xbar.title>
+# <xbar.version>v0.1</xbar.version>
+# <xbar.author>infeeeee</xbar.author>
+# <xbar.author.github>infeeeee</xbar.author.github>
+# <xbar.desc> Put Home Asstisant in your top bar!</xbar.desc>
+# <xbar.image>https://raw.githubusercontent.com/infeeeee/ha-argos/main/images/Screenshot%20from%202022-05-09%2023-54-36.png</xbar.image>
+# <xbar.dependencies>python, homebrew</xbar.dependencies>
+# <xbar.abouturl>https://github.com/infeeeee/ha-argos</xbar.abouturl>
+
+#  <xbar.var>string(HA_CONFIG_PATH="$HOME/Library/Application Support/xbar/plugins/ha-argos/configuration.yaml"): Path to configuartion.yaml</xbar.var>
+
 import os
-import requests
+from requests import get
 import sys
 import yaml
 import json
@@ -30,7 +56,7 @@ def call_ha(endpoint):
         "Authorization": the_token,
         "content-type": "application/json",
     }
-    response = requests.get(the_url, headers=headers)
+    response = get(the_url, headers=headers)
     return response.json()
 
 
@@ -150,56 +176,31 @@ def print_line(line, submenu=False):
 
     # There is a call to a service:
     if cmd['service']:
-        if HOST == 'argos':
-            output.append(
-                f'| bash=\"curl -X POST -H \\"Authorization: Bearer {SERVER_TOKEN}\\" -H \\"Content-Type: application/json\\"'
-            )
-            if cmd['entity'] or cmd['data']:
-                output.append('-d \'{')
-                if cmd['entity']:
-                    output.append(
-                        f'\\"entity_id\\": \\"{cmd["entity"]}\\"'
-                    )
-                if cmd['entity'] and cmd['data']:
-                    output.append(',')
-                if cmd['data']:
-                    data_keys = [d for d in cmd['data']]
-                    for i, d in enumerate(data_keys):
-                        output.append(f'\\"{d}\\": \\"{cmd["data"][d]}\\"')
-                        if i != len(data_keys) - 1:
-                            output.append(',')
-                output.append('}\'')
-            output.append(
-                f'{SERVER_URL}/api/services/{cmd["service"].replace(".","/")}" terminal=false'
-            )
-        elif HOST == 'swiftbar' or 'xbar':            
-            output.append(
-                f"| bash=\"curl -X POST -H \\'Authorization: Bearer {SERVER_TOKEN}\\' -H \'Content-Type: application/json\\'\""
-            )
-            if cmd['entity'] or cmd['data']:
-                output.append('-d \'{')
-                if cmd['entity']:
-                    output.append(
-                        f'\\"entity_id\\": \\"{cmd["entity"]}\\"'
-                    )
-                if cmd['entity'] and cmd['data']:
-                    output.append(',')
-                if cmd['data']:
-                    data_keys = [d for d in cmd['data']]
-                    for i, d in enumerate(data_keys):
-                        output.append(f'\\"{d}\\": \\"{cmd["data"][d]}\\"')
-                        if i != len(data_keys) - 1:
-                            output.append(',')
-                output.append('}\'')
-            output.append(
-                f'{SERVER_URL}/api/services/{cmd["service"].replace(".","/")}" terminal=true'
-            )
-    # No call, so add a separator:
-    else:
-        output.append('|')
+        bash_word = 'bash'
+        if HOST == 'xbar':
+            bash_word = 'shell'
+        output.extend([
+            f'| {bash_word}={SCRIPT_DIR}/ha-service.py param1="{SERVER_TOKEN}"',
+            f'param2="{SERVER_URL}"',
+            f'param3="{cmd["service"]}"'
+        ])
+        pn = 4
+        if cmd['entity'] or cmd['data']:
+            if cmd['entity']:
+                output.append(
+                    f'param{pn}="entity_id:{cmd["entity"]}"'
+                )
+                pn += 1
+            if cmd['data']:
+                data_keys = [d for d in cmd['data']]
+                for i, d in enumerate(data_keys):
+                    output.append(f'param{pn}="data:{d}:{cmd["data"][d]}"')
+                    pn += 1
+        output.append('terminal=false')
 
     # Add icon:
     if cmd['icon']:
+        output.append('|')
         output.append(print_icon(cmd['icon']))
 
     print((' ').join(output))
@@ -223,13 +224,13 @@ def print_icon(icon_string):
         # Try to find it in cache:
         if CACHE[icon_string] and not NOCACHE:
             return append_icon_size(f'templateImage={CACHE[icon_string]}')
-            
-        # Download icon if not in the cache:    
+
+        # Download icon if not in the cache:
         else:
-            icon_resp = requests.get(
+            icon_resp = get(
                 f'https://raw.githubusercontent.com/Templarian/MaterialDesign-SVG/master/svg/{mdi_name}.svg')
-            
-            if HOST =='argos':
+
+            if HOST == 'argos':
                 # Build svg tree:
                 svg_root = ET.fromstring(icon_resp.content)
 
@@ -249,22 +250,22 @@ def print_icon(icon_string):
                 # Encode svg:
                 icon_b = base64.b64encode(icon_str).decode("utf-8")
 
-            elif HOST == 'xbar'  or HOST == 'swiftbar':
+            elif HOST == 'xbar' or HOST == 'swiftbar':
                 # Convert to png on mac:
                 icon_png = svg2png(
                     bytestring=icon_resp.content,
                     dpi=144
                 )
                 # Encode png:
-                icon_b = base64.b64encode(icon_png).decode("utf-8")                
+                icon_b = base64.b64encode(icon_png).decode("utf-8")
 
             # Cache:
             if not NOCACHE:
                 global CACHE_CHANGED
                 CACHE_CHANGED = True
                 CACHE[icon_string] = icon_b
-            
-            return append_icon_size(f'templateImage={icon_b}')            
+
+            return append_icon_size(f'templateImage={icon_b}')
     else:
         # The other option should a base64 ecoded image:
         return append_icon_size(f'templateImage={icon_string}')
@@ -285,6 +286,7 @@ def append_icon_size(image_string):
         return image_string
 
 # ------------------------------- Start script ------------------------------- #
+
 
 # Check host:
 HOST = ''
@@ -312,10 +314,15 @@ if '--nocache' in sys.argv:
 # -------------------------- Open configuration.yaml ------------------------- #
 
 
-script_dir = os.path.dirname(os.path.realpath(__file__))
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 try:
-    with open(os.path.join(script_dir, 'configuration.yaml'), 'r') as config_file:
+    # Try to find configuration.yaml:
+    config_path = os.path.join(SCRIPT_DIR, 'configuration.yaml')
+    if HOST == 'xbar' and os.getenv('HA_CONFIG_PATH'):
+        config_path = os.getenv('HA_CONFIG_PATH')
+
+    with open(config_path, 'r') as config_file:
         config = defaultdict(bool, yaml.safe_load(config_file))
 
 except FileNotFoundError:
@@ -323,7 +330,7 @@ except FileNotFoundError:
     print('---')
     print('Configuration.yaml not found. Please create one!')
     print('It should be in this directory:')
-    print(f'{script_dir} | href={script_dir}')
+    print(f'{SCRIPT_DIR} | href={SCRIPT_DIR}')
     if HOST == 'argos':
         print('---')
         print(reload_string)
@@ -332,7 +339,7 @@ except FileNotFoundError:
 # ------------------------------ Open cache file ----------------------------- #
 
 try:
-    with open(os.path.join(script_dir, 'cache.json'), 'r') as cache_file:
+    with open(os.path.join(SCRIPT_DIR, 'cache.json'), 'r') as cache_file:
         json_dict = json.load(cache_file)
     CACHE = defaultdict(bool, json_dict)
 
@@ -377,5 +384,5 @@ if HOST == 'argos':
 if CACHE_CHANGED:
     cache_json = json.dumps(CACHE)
 
-    with open(os.path.join(script_dir, 'cache.json'), "w") as outfile:
+    with open(os.path.join(SCRIPT_DIR, 'cache.json'), "w") as outfile:
         outfile.write(cache_json)

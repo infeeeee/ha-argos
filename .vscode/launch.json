@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "ha-argos: No image cache",
+            "name": "argos: nocache",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/ha-argos.py",
@@ -13,6 +13,34 @@
             "justMyCode": false,
             "args": [
                 "--nocache"
+            ],
+            "env": {
+                "ARGOS_VERSION": "2"
+            }
+        },
+        {
+            "name": "swiftbar: noimage",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/ha-argos.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "--noimage"
+            ],
+            "env": {
+                "SWIFTBAR": "1"
+            }
+        },
+        {
+            "name": "argos: noimage",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/ha-argos.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "--noimage"
             ],
             "env": {
                 "ARGOS_VERSION": "2"
